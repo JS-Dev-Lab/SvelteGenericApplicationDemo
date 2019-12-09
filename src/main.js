@@ -1,10 +1,8 @@
+import { UiEngine } from "./Svelte-UiEngine";
 import App from './App.svelte';
+import { MyCountApplication } from "../application/app";
 
-const app = new App({
-	target: document.body,
-	props: {
-		name: 'world'
-	}
-});
+const engine = new UiEngine(document.body, App);
+const application = new MyCountApplication(engine);
 
-export default app;
+application.run();
