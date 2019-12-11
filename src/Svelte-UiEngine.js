@@ -29,7 +29,6 @@ class View {
     constructor(application, state) {
         this._application = application;
         this._state = state;
-        window.view = this;
     }
 
     update(updater) {
@@ -37,7 +36,7 @@ class View {
         updater(newSate);
         const state = Object.freeze(newSate);
         storeSetter(state);
-        return new View(this._application, newSate);
+        return new View(this._application, state);
     }
 }
 
