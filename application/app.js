@@ -1,29 +1,25 @@
-class MyCountApplication {
-  constructor(uiEngine) {
-    this._uiEngine = uiEngine;
-  }
-
-  run() {
-    let view = this._uiEngine.initialRender({
+function run(createView) {
+  const view = createView({
+    state: {
       name: "universal application!!",
       count: 0,
       array: [],
-      commands: {
-        add() {
-          view = view.update(state => {
-            state.count++;
-          });
-        },
-        setName(value) {
-          view = view.update(state => {
-            state.name = value;
-          });
-        }
+    },
+    commands: {
+      add() {
+        view.update(state => {
+          state.count++;
+        });
+      },
+      setName(value) {
+        view.update(state => {
+          state.name = value;
+        });
       }
-    });
-  }
+    }
+  });
 }
 
 export {
-  MyCountApplication
+  run
 }

@@ -1,17 +1,24 @@
 let store = null;
+let commandsStore = null;
 
-function set(storeValue) {
+function set({state, commands}) {
     if (store !== null) {
         return;
     }
-    store = storeValue;
+    store = state;
+    commandsStore = commands;
 }
 
-function getMain() {
+function getState() {
     return store;
 }
 
+function getCommands() {
+    return commandsStore;
+}
+
 export {
-    getMain,
+    getState,
+    getCommands,
     set
 }

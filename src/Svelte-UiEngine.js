@@ -8,20 +8,18 @@ const storeBuilder = (state) => readable(state, function start(set) {
     return function stop() { };
 });
 
+const constStoreBuilder = (state) => readable(state, function start() {
+    return function stop() { };
+});
 
-class UiEngine {
-    constructor(element, App) {
-        this._element = element;
-        this._App = App;
-    }
-
-    initialRender(state) {
-        const { _App: App, _element : target } = this;
+function viewCreatorFactory(target, App) {
+    return ({ state, commands }) => {
         const frozenState = Object.freeze({ ...state });
         const store = storeBuilder(frozenState);
-        set(store);
-        const app = new App({target});
-        return new View(app, frozenState);
+        const commandsStore = constStoreBuilder(commands);
+        set({ state: store, commands: commandsStore });
+        const app = new App({ target });
+        return new View(app, frozenState, commands);
     }
 }
 
@@ -32,14 +30,21 @@ class View {
     }
 
     update(updater) {
-        const newSate = { ...this._state };
-        updater(newSate);
-        const state = Object.freeze(newSate);
-        storeSetter(state);
-        return new View(this._application, state);
+        const newState = { ...this._state };
+        updater(newState);
+        this.fullUpdate(newState);
+    }
+
+    get state() {
+        return this._state;
+    }
+
+    fullUpdate(newState) {
+        this._state = Object.freeze(newState);
+        storeSetter(this._state);
     }
 }
 
 export {
-    UiEngine
+    viewCreatorFactory
 };
